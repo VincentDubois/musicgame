@@ -12,19 +12,28 @@ import java.util.Vector;
 
 
 /**
- * TODO: document your custom view class.
+ * Classe affichant le jeu.
  */
 public class GameView extends View implements View.OnTouchListener {
 
+    // Nombre de lignes afficher à chaque tour
     public static final int SPEED = 1;
+    // Taille en pixel de la taille de chaque ligne
     public static final int PIXEL_SIZE = 20;
-    Vector<Float> wall = null;
+    public static final int TURN_DELAY_MILLIS = 25;
 
-    Vector<Sprite> sprite;
+    // Position des éléments du mur
+    Vector<Float> wall = null;
+    // Liste des sprites (bonus/malus) à afficher
+    Vector<Sprite> sprite = null;
 
     private Paint wallPaint;
+
+    // Gestion du timer
     private Handler handler;
     private boolean running = false;
+
+    // dernière pôsition du joueur
     private float lastX;
     private float lastY;
 
@@ -46,9 +55,11 @@ public class GameView extends View implements View.OnTouchListener {
 
 
     private void init(AttributeSet attrs, int defStyle) {
+        // On instancie les vecteurs
         wall =  new Vector<>();
         sprite = new Vector<>();
 
+        // Caractéristiques des bords
         wallPaint = new Paint();
         wallPaint.setAntiAlias(true);
         wallPaint.setColor(0xff224499 );
@@ -56,19 +67,22 @@ public class GameView extends View implements View.OnTouchListener {
         wallPaint.setStrokeWidth(PIXEL_SIZE+1);
         wallPaint.setStrokeCap(Paint.Cap.ROUND);
 
+        //On prépare le timer
         handler = new Handler();
 
+        // On écoute les évènements.
         setOnTouchListener(this);
 
     }
 
-
+    // Démarrer l'animation
     private void startTimer(){
         if (running == true) return;
         running = true;
         reStartTimer();
     }
 
+    // Demande d'une nouveau tour de jeu
     private synchronized void reStartTimer(){
         handler.removeCallbacks(null);
         handler.postDelayed(new Runnable(){
@@ -77,9 +91,10 @@ public class GameView extends View implements View.OnTouchListener {
                 if (running) reStartTimer();
                 update();
             }
-        }, 25);
+        }, TURN_DELAY_MILLIS);
     }
 
+    // Arrêt de l'animation
     private  void stopTimer(){
         running = false;
         handler.removeCallbacks(null);
@@ -87,7 +102,7 @@ public class GameView extends View implements View.OnTouchListener {
 
 
 
-
+    // Quand la taille du jeu est connue
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -95,10 +110,8 @@ public class GameView extends View implements View.OnTouchListener {
         createGame();
     }
 
-
     private void createGame() {
         createWall();
-
     }
 
     private void createWall() {
@@ -106,32 +119,47 @@ public class GameView extends View implements View.OnTouchListener {
         updateWall(this.getHeight()/ PIXEL_SIZE);
     }
 
+    /**
+     * Ajoute le nombre de lignes indiquées au mur
+     * Si le mur dépasse la taille de la fenêtre, on supprime les anciennes lignes
+     * @param nb
+     */
     private void updateWall(int nb) {
         for(int i = 0; i< nb; ++i) {
-            float last = wall.lastElement();
-            last += (Math.random() - 0.5f) * 0.2f;
-            if (last < 0) last = 0;
+            float last = wall.lastElement(); // On repart de la dernière position
+            last += (Math.random() - 0.5f) * 0.2f; // On ajoute une petite valeur, positive ou négative
+            if (last < 0) last = 0; // On reste entre 0 et 1
             if (last > 1) last = 1;
             wall.add(last);
-            if (wall.size() > this.getHeight() / PIXEL_SIZE) wall.remove(0);
+            if (wall.size() > this.getHeight() / PIXEL_SIZE) wall.remove(0); // On retire une ligne si nécessaire
         }
     }
 
+    /**
+     * Gère un tour de jeu
+     */
     private void update(){
-        updateWall(SPEED);
-        updateSprite();
+        updateWall(SPEED); // On déplace les murs
+        updateSprite(); // On déplace les sprites
 
         int i = 0;
-        while (i< sprite.size()){
+        while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
             if (s.contains(lastX,lastY,20)){
                 sprite.remove(i);
             } else ++i;
         }
 
-        invalidate();
+        invalidate(); // On demande le rafraîchissement de l'écran
     }
 
+
+    /**
+     * Gestion d'un tour pour les sprites :
+     *
+     * ajout aléatoire d'un sprite
+     * déplacement de tous les sprites
+     */
     private void updateSprite() {
         if (sprite.size()< 10 && Math.random()< 0.05)
             sprite.add(Math.random() > 0.5f ? new Bonus(this) :  new Malus(this));
@@ -142,15 +170,19 @@ public class GameView extends View implements View.OnTouchListener {
         }
     }
 
-
+    /**
+     * Réalise le dessin du jeu
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         canvas.drawColor(0xff99aaee);
 
-        if (wall == null) return;
+        if (wall == null) return; // Si le jeu n'est pas initialisé, on ne fait rien
 
+        // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
             canvas.drawLine(0,getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,
                     0.3f*wall.get(i)*getWidth(),getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
@@ -159,11 +191,11 @@ public class GameView extends View implements View.OnTouchListener {
                     getWidth(),getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
         }
 
+        //Affichage des sprites
         for(Sprite s : sprite){
             s.draw(canvas);
         }
     }
-
 
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
@@ -172,12 +204,14 @@ public class GameView extends View implements View.OnTouchListener {
         int action = motionEvent.getActionMasked();
         int ndx = motionEvent.getActionIndex();
         if (action == MotionEvent.ACTION_DOWN){
-
+            // On vient de toucher l'écran, on démarre l'animation
             startTimer();
 
         } else if (action == MotionEvent.ACTION_UP){
+            // On ne touche plus l'écran, arrêter l'animation
             stopTimer();
         }
+        // Mise à jour de la position
         lastX = motionEvent.getX(ndx);
         lastY = motionEvent.getY(ndx);
 

@@ -6,12 +6,19 @@ import android.view.View;
 
 /**
  * Created by vincent.dubois on 24/01/17.
+ *
+ * Classe abstraite gérant les fonctions communes à tous les sprites.
  */
 public class AbstractSprite implements Sprite {
 
+    // taille en pixel du sprite
     public static final int SIZE = 30;
+    // Coordonnée
     float x;
-    float y;View view;
+    float y;
+    // vue dans laquelle on s'affiche
+    View view;
+
     private final Paint paint;
 
     public AbstractSprite(View view, Paint paint) {
