@@ -2,7 +2,10 @@ package fr.univartois.iutlens.mmi.web2.musicgame;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -16,10 +19,19 @@ import java.util.Vector;
  */
 public class GameView extends View implements View.OnTouchListener {
 
+
+    public static final int WIDTH = 1080;
+    public static final int HEIGHT = 1920;
+    public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
+
     // Nombre de lignes afficher à chaque tour
     public static final int SPEED = 1;
     // Taille en pixel de la taille de chaque ligne
     public static final int PIXEL_SIZE = 20;
+
+    public static final int LINES = HEIGHT / PIXEL_SIZE;
+
+
     public static final int TURN_DELAY_MILLIS = 25;
 
     // Position des éléments du mur
@@ -34,8 +46,11 @@ public class GameView extends View implements View.OnTouchListener {
     private boolean running = false;
 
     // dernière pôsition du joueur
-    private float lastX;
-    private float lastY;
+    private PointF last = new PointF();
+
+    private Matrix transform;
+    private Matrix inverseTransform;
+    private float[] pos = new float[2];
 
 
     public GameView(Context context) {
@@ -73,6 +88,7 @@ public class GameView extends View implements View.OnTouchListener {
         // On écoute les évènements.
         setOnTouchListener(this);
 
+        createGame();
     }
 
     // Démarrer l'animation
@@ -107,7 +123,14 @@ public class GameView extends View implements View.OnTouchListener {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w == 0 || h == 0) return;
-        createGame();
+
+        transform = new Matrix();
+        RectF screen = new RectF(0,0,w,h);
+        transform.setRectToRect(VIRTUAL_SCREEN,screen, Matrix.ScaleToFit.CENTER);
+
+        inverseTransform = new Matrix();
+        transform.invert(inverseTransform);
+
     }
 
     private void createGame() {
@@ -116,7 +139,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     private void createWall() {
         wall.add((float) Math.random());
-        updateWall(this.getHeight()/ PIXEL_SIZE);
+        updateWall(LINES);
     }
 
     /**
@@ -131,7 +154,7 @@ public class GameView extends View implements View.OnTouchListener {
             if (last < 0) last = 0; // On reste entre 0 et 1
             if (last > 1) last = 1;
             wall.add(last);
-            if (wall.size() > this.getHeight() / PIXEL_SIZE) wall.remove(0); // On retire une ligne si nécessaire
+            if (wall.size() > LINES) wall.remove(0); // On retire une ligne si nécessaire
         }
     }
 
@@ -145,7 +168,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(lastX,lastY,20)){
+            if (s.contains(last.x,last.y,20)){
                 sprite.remove(i);
             } else ++i;
         }
@@ -162,7 +185,7 @@ public class GameView extends View implements View.OnTouchListener {
      */
     private void updateSprite() {
         if (sprite.size()< 10 && Math.random()< 0.05)
-            sprite.add(Math.random() > 0.5f ? new Bonus(this) :  new Malus(this));
+            sprite.add(Math.random() > 0.5f ? new Bonus() :  new Malus());
 
 
         for(Sprite s : sprite){
@@ -182,19 +205,25 @@ public class GameView extends View implements View.OnTouchListener {
 
         if (wall == null) return; // Si le jeu n'est pas initialisé, on ne fait rien
 
+        // On sauvegarde la transformation actuelle et on applique la notre
+        canvas.save();
+        canvas.concat(transform);
+
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
-            canvas.drawLine(0,getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,
-                    0.3f*wall.get(i)*getWidth(),getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
+            canvas.drawLine(0,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    0.3f*wall.get(i)*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
 
-            canvas.drawLine((0.7f+0.3f*wall.get(i))*getWidth(),getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,
-                    getWidth(),getHeight()-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
+            canvas.drawLine((0.7f+0.3f*wall.get(i))*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
         }
 
         //Affichage des sprites
         for(Sprite s : sprite){
             s.draw(canvas);
         }
+
+        canvas.restore(); // On restore la transformation d'origine
     }
 
     @Override
@@ -211,9 +240,15 @@ public class GameView extends View implements View.OnTouchListener {
             // On ne touche plus l'écran, arrêter l'animation
             stopTimer();
         }
-        // Mise à jour de la position
-        lastX = motionEvent.getX(ndx);
-        lastY = motionEvent.getY(ndx);
+        // Mise à jour de la position. Il faut appliquer la matrice
+        // de transformation inverse, ce qui nécessite de placer le point
+        // dans un float[]
+        pos[0] = motionEvent.getX(ndx);
+        pos[1] = motionEvent.getY(ndx);
+
+        inverseTransform.mapPoints(pos);
+
+        last.set(pos[0], pos[1]);
 
         return used;
     }

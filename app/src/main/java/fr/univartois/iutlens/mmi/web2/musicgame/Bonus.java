@@ -1,8 +1,6 @@
 package fr.univartois.iutlens.mmi.web2.musicgame;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.View;
 
 /**
  * Created by vincent.dubois on 24/01/17.
@@ -18,8 +16,8 @@ public class Bonus extends AbstractSprite {
 
     }
 
-    public Bonus(View view){
-        super(view, paint);
+    public Bonus(){
+        super(paint);
 
     }
 

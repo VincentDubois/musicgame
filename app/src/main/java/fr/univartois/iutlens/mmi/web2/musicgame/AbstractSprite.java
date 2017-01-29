@@ -2,7 +2,6 @@ package fr.univartois.iutlens.mmi.web2.musicgame;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.View;
 
 /**
  * Created by vincent.dubois on 24/01/17.
@@ -17,23 +16,21 @@ public class AbstractSprite implements Sprite {
     float x;
     float y;
     // vue dans laquelle on s'affiche
-    View view;
 
     private final Paint paint;
 
-    public AbstractSprite(View view, Paint paint) {
-        this.x = (float) (Math.random()*view.getWidth());
+    public AbstractSprite(Paint paint) {
+        this.x = (float) (Math.random()*GameView.WIDTH);
         this.y =  0;
-        this.view = view;
         this.paint= paint;
     }
 
     @Override
     public void act() {
         y += GameView.PIXEL_SIZE*GameView.SPEED;
-        if (y> view.getHeight()) {
+        if (y> GameView.HEIGHT) {
             y = 0;
-            this.x = (float) (Math.random()*view.getWidth());
+            this.x = (float) (Math.random()*GameView.WIDTH);
         };
 
     }

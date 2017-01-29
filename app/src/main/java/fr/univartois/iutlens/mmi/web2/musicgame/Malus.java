@@ -1,8 +1,6 @@
 package fr.univartois.iutlens.mmi.web2.musicgame;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.View;
 
 /**
  * Created by vincent.dubois on 24/01/17.
@@ -17,8 +15,8 @@ public class Malus extends AbstractSprite {
 
     }
 
-    public Malus(View view){
-        super(view, paint);
+    public Malus(){
+        super(paint);
 
     }
 
