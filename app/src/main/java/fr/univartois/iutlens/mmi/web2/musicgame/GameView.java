@@ -24,9 +24,9 @@ public class GameView extends View implements View.OnTouchListener {
     public static final int HEIGHT = 1920;
     public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
 
-    // Nombre de lignes afficher à chaque tour
+    // Nombre de lignes affichées à chaque tour
     public static final int SPEED = 1;
-    // Taille en pixel de la taille de chaque ligne
+    // Taille en pixels de la taille de chaque ligne
     public static final int PIXEL_SIZE = 20;
 
     public static final int LINES = HEIGHT / PIXEL_SIZE;
