@@ -55,21 +55,23 @@ public class GameView extends View implements View.OnTouchListener {
 
     public GameView(Context context) {
         super(context);
-        init(null, 0);
+        init(context,null, 0);
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init(context,attrs, 0);
     }
 
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init(context,attrs, defStyle);
     }
 
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        SpriteSheet.register(context,R.drawable.ronds,2,1);
+
         // On instancie les vecteurs
         wall =  new Vector<>();
         sprite = new Vector<>();

@@ -7,17 +7,10 @@ import android.graphics.Paint;
  */
 public class Bonus extends AbstractSprite {
 
-    final private static Paint paint = new Paint();
 
-    {
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(true);
-        paint.setColor(0xff229933);
-
-    }
 
     public Bonus(){
-        super(paint);
+        super(R.drawable.ronds,0);
 
     }
 

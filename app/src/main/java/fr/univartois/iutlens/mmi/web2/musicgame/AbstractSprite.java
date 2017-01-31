@@ -12,17 +12,19 @@ public class AbstractSprite implements Sprite {
 
     // taille en pixel du sprite
     public static final int SIZE = 30;
+    private final SpriteSheet spriteSheet;
+    private final int n;
     // Coordonnée
     float x;
     float y;
     // vue dans laquelle on s'affiche
 
-    private final Paint paint;
 
-    public AbstractSprite(Paint paint) {
+    public AbstractSprite( int id,int n) {
         this.x = (float) (Math.random()*GameView.WIDTH);
         this.y =  0;
-        this.paint= paint;
+        this.spriteSheet = SpriteSheet.get(id);
+        this.n = n;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class AbstractSprite implements Sprite {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle(x,y,SIZE,paint);
+      spriteSheet.paint(canvas,n,x,y);
     }
 
     @Override

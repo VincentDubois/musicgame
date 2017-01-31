@@ -7,16 +7,10 @@ import android.graphics.Paint;
  */
 public class Malus extends AbstractSprite {
 
-    final private static Paint paint = new Paint();
-    {
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(true);
-        paint.setColor(0xffff3322);
 
-    }
 
     public Malus(){
-        super(paint);
+        super(R.drawable.ronds,1);
 
     }
 
