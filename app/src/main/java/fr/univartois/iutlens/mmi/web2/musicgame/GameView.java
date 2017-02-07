@@ -22,6 +22,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 1920;
+    public static final int Y_JOUEUR = HEIGHT - 100;
     public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
 
     // Nombre de lignes affichées à chaque tour
@@ -30,6 +31,7 @@ public class GameView extends View implements View.OnTouchListener {
     public static final int PIXEL_SIZE = 20;
 
     public static final int LINES = HEIGHT / PIXEL_SIZE;
+    public static final int LINES_JOUEUR = Y_JOUEUR / PIXEL_SIZE;
 
 
     public static final int TURN_DELAY_MILLIS = 25;
@@ -246,7 +248,8 @@ public class GameView extends View implements View.OnTouchListener {
         // de transformation inverse, ce qui nécessite de placer le point
         // dans un float[]
         pos[0] = motionEvent.getX(ndx);
-        pos[1] = motionEvent.getY(ndx);
+        //pos[1] = motionEvent.getY(ndx);
+        pos[1]= Y_JOUEUR;
 
         inverseTransform.mapPoints(pos);
 
