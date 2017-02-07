@@ -227,6 +227,14 @@ public class GameView extends View implements View.OnTouchListener {
             s.draw(canvas);
         }
 
+        // Affichage de la div du doigt
+
+            canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
+        SpriteSheet spriteSheet = SpriteSheet.get(R.drawable.ronds);
+
+        spriteSheet.paint(canvas,0,last.x-spriteSheet.w/2,Y_JOUEUR-spriteSheet.h/2);
+
+
         canvas.restore(); // On restore la transformation d'origine
     }
 
