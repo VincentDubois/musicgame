@@ -22,7 +22,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 1920;
-    public static final int Y_JOUEUR = HEIGHT - 100;
+    public static final int Y_JOUEUR = HEIGHT - 300;
     public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
 
     // Nombre de lignes affichées à chaque tour
@@ -96,7 +96,7 @@ public class GameView extends View implements View.OnTouchListener {
     }
 
     // Démarrer l'animation
-    private void startTimer(){
+    private synchronized void startTimer(){
         if (running == true) return;
         running = true;
         reStartTimer();
@@ -104,20 +104,22 @@ public class GameView extends View implements View.OnTouchListener {
 
     // Demande d'une nouveau tour de jeu
     private synchronized void reStartTimer(){
-        handler.removeCallbacks(null);
+        handler.removeCallbacksAndMessages(null);
         handler.postDelayed(new Runnable(){
             @Override
             public void run(){
-                if (running) reStartTimer();
-                update();
+                if (running) {
+                    reStartTimer();
+                    update();
+                }
             }
         }, TURN_DELAY_MILLIS);
     }
 
     // Arrêt de l'animation
-    private  void stopTimer(){
+    private synchronized void stopTimer(){
+        handler.removeCallbacksAndMessages(null);
         running = false;
-        handler.removeCallbacks(null);
     }
 
 
