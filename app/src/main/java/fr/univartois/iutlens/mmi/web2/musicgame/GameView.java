@@ -53,6 +53,7 @@ public class GameView extends View implements View.OnTouchListener {
     private Matrix transform;
     private Matrix inverseTransform;
     private float[] pos = new float[2];
+    private SpriteSheet spriteSheet;
 
 
     public GameView(Context context) {
@@ -73,6 +74,9 @@ public class GameView extends View implements View.OnTouchListener {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
+        SpriteSheet.register(context,R.drawable.cursor,1,1);
+
+        spriteSheet = SpriteSheet.get(R.drawable.cursor);
 
         // On instancie les vecteurs
         wall =  new Vector<>();
@@ -230,11 +234,8 @@ public class GameView extends View implements View.OnTouchListener {
         }
 
         // Affichage de la div du doigt
-
-            canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
-        SpriteSheet spriteSheet = SpriteSheet.get(R.drawable.ronds);
-
-        spriteSheet.paint(canvas,0,last.x-spriteSheet.w/2,Y_JOUEUR-spriteSheet.h/2);
+        canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
+        spriteSheet.paint(canvas,0,last.x- spriteSheet.w/2,Y_JOUEUR- spriteSheet.h/2);
 
 
         canvas.restore(); // On restore la transformation d'origine
