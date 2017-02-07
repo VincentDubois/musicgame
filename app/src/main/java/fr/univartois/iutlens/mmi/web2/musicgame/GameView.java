@@ -178,7 +178,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,20)){
+            if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
             } else ++i;
         }
@@ -259,10 +259,10 @@ public class GameView extends View implements View.OnTouchListener {
         // de transformation inverse, ce qui nécessite de placer le point
         // dans un float[]
         pos[0] = motionEvent.getX(ndx);
-        //pos[1] = motionEvent.getY(ndx);
-        pos[1]= Y_JOUEUR;
+        pos[1] = motionEvent.getY(ndx);
 
         inverseTransform.mapPoints(pos);
+        pos[1]= Y_JOUEUR;
 
         last.set(pos[0], pos[1]);
 

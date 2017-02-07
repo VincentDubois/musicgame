@@ -39,7 +39,7 @@ public class AbstractSprite implements Sprite {
 
     @Override
     public void draw(Canvas canvas) {
-      spriteSheet.paint(canvas,n,x,y);
+      spriteSheet.paint(canvas,n,x-spriteSheet.w/2,y-spriteSheet.h/2);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class AbstractSprite implements Sprite {
         float dy = y-this.y;
 //        if (dy>=move) dy -= move;
 //        else if (dy >= 0) dy = 0;
-        return dx*dx+dy*dy < (size+SIZE) *(size+SIZE);
+        return dx*dx+dy*dy < (size+spriteSheet.w/2) *(size+spriteSheet.h/2);
 
     }
 }
