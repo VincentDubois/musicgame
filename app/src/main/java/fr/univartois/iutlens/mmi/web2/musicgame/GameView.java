@@ -54,6 +54,8 @@ public class GameView extends View implements View.OnTouchListener {
     private Matrix inverseTransform;
     private float[] pos = new float[2];
     private SpriteSheet spriteSheet;
+    private Paint scorePaint;
+    private int scoreNb = 0;
 
 
     public GameView(Context context) {
@@ -76,6 +78,9 @@ public class GameView extends View implements View.OnTouchListener {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
         SpriteSheet.register(context,R.drawable.cursor,1,1);
 
+        SpriteSheet.register(context,R.drawable.sprite_bonus,2,1);
+        SpriteSheet.register(context,R.drawable.sprite_malus,2,1);
+
         spriteSheet = SpriteSheet.get(R.drawable.cursor);
 
         // On instancie les vecteurs
@@ -89,6 +94,14 @@ public class GameView extends View implements View.OnTouchListener {
         wallPaint.setStyle(Paint.Style.STROKE);
         wallPaint.setStrokeWidth(PIXEL_SIZE+1);
         wallPaint.setStrokeCap(Paint.Cap.ROUND);
+        //COLOR TXT SCORE
+        scorePaint = new Paint();
+//        scorePaint.setAntiAlias(true);
+        scorePaint.setStyle(Paint.Style.STROKE);
+        scorePaint.setColor(0xff000000 );
+
+        scorePaint.setStrokeWidth(3);
+        scorePaint.setTextSize(48);
 
         //On prépare le timer
         handler = new Handler();
@@ -160,7 +173,7 @@ public class GameView extends View implements View.OnTouchListener {
     private void updateWall(int nb) {
         for(int i = 0; i< nb; ++i) {
             float last = wall.lastElement(); // On repart de la dernière position
-            last += (Math.random() - 0.5f) * 0.2f; // On ajoute une petite valeur, positive ou négative
+            last += (Math.random() - 0.5f) * 0.1f; // On ajoute une petite valeur, positive ou négative
             if (last < 0) last = 0; // On reste entre 0 et 1
             if (last > 1) last = 1;
             wall.add(last);
@@ -180,6 +193,8 @@ public class GameView extends View implements View.OnTouchListener {
             Sprite s = sprite.elementAt(i);
             if (s.contains(last.x,last.y,spriteSheet.h/2 - 15)){
                 sprite.remove(i);
+                if (s instanceof Bonus){scoreNb ++;}
+                else{scoreNb --;}
             } else ++i;
         }
 
@@ -221,11 +236,15 @@ public class GameView extends View implements View.OnTouchListener {
 
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
+            /*
             canvas.drawLine(0,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     0.3f*wall.get(i)*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
 
             canvas.drawLine((0.7f+0.3f*wall.get(i))*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
+             */
+            canvas.drawLine(0.3f*wall.get(i)*WIDTH, HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    0.3f*wall.get(i)*WIDTH+(canvas.getWidth()*3/4), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE, wallPaint);
         }
 
         //Affichage des sprites
@@ -239,6 +258,8 @@ public class GameView extends View implements View.OnTouchListener {
 
 
         canvas.restore(); // On restore la transformation d'origine
+
+        canvas.drawText("Score : "+scoreNb, 20, 50, scorePaint);
     }
 
     @Override
