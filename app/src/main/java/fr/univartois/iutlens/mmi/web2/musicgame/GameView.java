@@ -22,6 +22,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     public static final int WIDTH = 1080;
     public static final int HEIGHT = 1920;
+    public static final int Y_JOUEUR = HEIGHT - 300;
     public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
 
     // Nombre de lignes affichées à chaque tour
@@ -30,6 +31,7 @@ public class GameView extends View implements View.OnTouchListener {
     public static final int PIXEL_SIZE = 20;
 
     public static final int LINES = HEIGHT / PIXEL_SIZE;
+    public static final int LINES_JOUEUR = Y_JOUEUR / PIXEL_SIZE;
 
 
     public static final int TURN_DELAY_MILLIS = 25;
@@ -51,6 +53,7 @@ public class GameView extends View implements View.OnTouchListener {
     private Matrix transform;
     private Matrix inverseTransform;
     private float[] pos = new float[2];
+    private SpriteSheet spriteSheet;
 
 
     public GameView(Context context) {
@@ -71,6 +74,9 @@ public class GameView extends View implements View.OnTouchListener {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
+        SpriteSheet.register(context,R.drawable.cursor,1,1);
+
+        spriteSheet = SpriteSheet.get(R.drawable.cursor);
 
         // On instancie les vecteurs
         wall =  new Vector<>();
@@ -94,7 +100,7 @@ public class GameView extends View implements View.OnTouchListener {
     }
 
     // Démarrer l'animation
-    private void startTimer(){
+    private synchronized void startTimer(){
         if (running == true) return;
         running = true;
         reStartTimer();
@@ -102,20 +108,22 @@ public class GameView extends View implements View.OnTouchListener {
 
     // Demande d'une nouveau tour de jeu
     private synchronized void reStartTimer(){
-        handler.removeCallbacks(null);
+        handler.removeCallbacksAndMessages(null);
         handler.postDelayed(new Runnable(){
             @Override
             public void run(){
-                if (running) reStartTimer();
-                update();
+                if (running) {
+                    reStartTimer();
+                    update();
+                }
             }
         }, TURN_DELAY_MILLIS);
     }
 
     // Arrêt de l'animation
-    private  void stopTimer(){
+    private synchronized void stopTimer(){
+        handler.removeCallbacksAndMessages(null);
         running = false;
-        handler.removeCallbacks(null);
     }
 
 
@@ -170,7 +178,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,20)){
+            if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
             } else ++i;
         }
@@ -225,6 +233,11 @@ public class GameView extends View implements View.OnTouchListener {
             s.draw(canvas);
         }
 
+        // Affichage de la div du doigt
+        canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
+        spriteSheet.paint(canvas,0,last.x- spriteSheet.w/2,Y_JOUEUR- spriteSheet.h/2);
+
+
         canvas.restore(); // On restore la transformation d'origine
     }
 
@@ -249,6 +262,7 @@ public class GameView extends View implements View.OnTouchListener {
         pos[1] = motionEvent.getY(ndx);
 
         inverseTransform.mapPoints(pos);
+        pos[1]= Y_JOUEUR;
 
         last.set(pos[0], pos[1]);
 
