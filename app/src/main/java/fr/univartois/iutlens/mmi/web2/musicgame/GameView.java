@@ -54,6 +54,8 @@ public class GameView extends View implements View.OnTouchListener {
     private Matrix inverseTransform;
     private float[] pos = new float[2];
     private SpriteSheet spriteSheet;
+    private Paint scorePaint;
+    private int scoreNb = 0;
 
 
     public GameView(Context context) {
@@ -89,6 +91,14 @@ public class GameView extends View implements View.OnTouchListener {
         wallPaint.setStyle(Paint.Style.STROKE);
         wallPaint.setStrokeWidth(PIXEL_SIZE+1);
         wallPaint.setStrokeCap(Paint.Cap.ROUND);
+        //COLOR TXT SCORE
+        scorePaint = new Paint();
+//        scorePaint.setAntiAlias(true);
+        scorePaint.setStyle(Paint.Style.STROKE);
+        scorePaint.setColor(0xff000000 );
+
+        scorePaint.setStrokeWidth(3);
+        scorePaint.setTextSize(48);
 
         //On prépare le timer
         handler = new Handler();
@@ -180,6 +190,8 @@ public class GameView extends View implements View.OnTouchListener {
             Sprite s = sprite.elementAt(i);
             if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
+                if (s instanceof Bonus){scoreNb ++;}
+                else{scoreNb --;}
             } else ++i;
         }
 
@@ -243,6 +255,8 @@ public class GameView extends View implements View.OnTouchListener {
 
 
         canvas.restore(); // On restore la transformation d'origine
+
+        canvas.drawText("Score : "+scoreNb, 20, 50, scorePaint);
     }
 
     @Override
