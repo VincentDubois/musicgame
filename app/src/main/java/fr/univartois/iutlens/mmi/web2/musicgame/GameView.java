@@ -76,6 +76,9 @@ public class GameView extends View implements View.OnTouchListener {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
         SpriteSheet.register(context,R.drawable.cursor,1,1);
 
+        SpriteSheet.register(context,R.drawable.sprite_bonus,2,1);
+        SpriteSheet.register(context,R.drawable.sprite_malus,2,1);
+
         spriteSheet = SpriteSheet.get(R.drawable.cursor);
 
         // On instancie les vecteurs
