@@ -191,7 +191,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,30)){
+            if (s.contains(last.x,last.y,spriteSheet.h/2 - 15)){
                 sprite.remove(i);
                 if (s instanceof Bonus){scoreNb ++;}
                 else{scoreNb --;}
