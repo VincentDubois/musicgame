@@ -90,7 +90,7 @@ public class GameView extends View implements View.OnTouchListener {
         // Caractéristiques des bords
         wallPaint = new Paint();
         wallPaint.setAntiAlias(true);
-        wallPaint.setColor(0xff224499 );
+        wallPaint.setColor(0xff000000 );
         wallPaint.setStyle(Paint.Style.STROKE);
         wallPaint.setStrokeWidth(PIXEL_SIZE+1);
         wallPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -191,7 +191,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,spriteSheet.h/2 - 15)){
+            if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
                 if (s instanceof Bonus){scoreNb ++;}
                 else{scoreNb --;}
