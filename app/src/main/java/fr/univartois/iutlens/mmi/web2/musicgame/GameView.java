@@ -32,8 +32,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     public static final int LINES = HEIGHT / PIXEL_SIZE;
     public static final int LINES_JOUEUR = Y_JOUEUR / PIXEL_SIZE;
-
-
+    
     public static final int TURN_DELAY_MILLIS = 25;
 
     // Position des éléments du mur
@@ -195,6 +194,8 @@ public class GameView extends View implements View.OnTouchListener {
             } else ++i;
         }
 
+        checkWall();
+
         invalidate(); // On demande le rafraîchissement de l'écran
     }
 
@@ -240,8 +241,8 @@ public class GameView extends View implements View.OnTouchListener {
             canvas.drawLine((0.7f+0.3f*wall.get(i))*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
              */
-            canvas.drawLine(0.3f*wall.get(i)*WIDTH, HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
-                    0.3f*wall.get(i)*WIDTH+(canvas.getWidth()*3/4), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE, wallPaint);
+            canvas.drawLine(getStartXWall(i), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    getStartXWall(i) +(WIDTH*3/4), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE, wallPaint);
         }
 
         //Affichage des sprites
@@ -253,10 +254,30 @@ public class GameView extends View implements View.OnTouchListener {
         canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
         spriteSheet.paint(canvas,0,last.x- spriteSheet.w/2,Y_JOUEUR- spriteSheet.h/2);
 
+        //
+
+
 
         canvas.restore(); // On restore la transformation d'origine
 
         canvas.drawText("Score : "+scoreNb, 20, 50, scorePaint);
+    }
+
+    private float getStartXWall(int line) {
+        return 0.3f*wall.get(line)*WIDTH;
+    }
+
+    public void checkWall() {
+//        Y_JOUEUR
+        float x_joueur = last.x;
+        float x_wall = getStartXWall(LINES_JOUEUR);
+
+        if ( x_wall > x_joueur ) {
+            scoreNb--;
+        } else if ( x_wall + (WIDTH * 3/4) < x_joueur) {
+            scoreNb--;
+        }
+
     }
 
     @Override
