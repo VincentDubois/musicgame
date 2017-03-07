@@ -160,7 +160,7 @@ public class GameView extends View implements View.OnTouchListener {
     private void updateWall(int nb) {
         for(int i = 0; i< nb; ++i) {
             float last = wall.lastElement(); // On repart de la dernière position
-            last += (Math.random() - 0.5f) * 0.2f; // On ajoute une petite valeur, positive ou négative
+            last += (Math.random() - 0.5f) * 0.1f; // On ajoute une petite valeur, positive ou négative
             if (last < 0) last = 0; // On reste entre 0 et 1
             if (last > 1) last = 1;
             wall.add(last);
@@ -221,11 +221,15 @@ public class GameView extends View implements View.OnTouchListener {
 
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
+            /*
             canvas.drawLine(0,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     0.3f*wall.get(i)*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
 
             canvas.drawLine((0.7f+0.3f*wall.get(i))*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
+             */
+            canvas.drawLine(0.3f*wall.get(i)*WIDTH, HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    0.3f*wall.get(i)*WIDTH+(canvas.getWidth()*3/4), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE, wallPaint);
         }
 
         //Affichage des sprites
