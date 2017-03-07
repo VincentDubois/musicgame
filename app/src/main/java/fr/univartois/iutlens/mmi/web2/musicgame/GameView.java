@@ -98,7 +98,7 @@ public class GameView extends View implements View.OnTouchListener {
         scorePaint = new Paint();
 //        scorePaint.setAntiAlias(true);
         scorePaint.setStyle(Paint.Style.STROKE);
-        scorePaint.setColor(0xff000000 );
+        scorePaint.setColor(0xffffffff );
 
         scorePaint.setStrokeWidth(3);
         scorePaint.setTextSize(48);
