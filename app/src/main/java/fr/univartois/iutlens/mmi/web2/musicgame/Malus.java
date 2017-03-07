@@ -10,7 +10,7 @@ public class Malus extends AbstractSprite {
 
 
     public Malus(){
-        super(R.drawable.ronds,1);
+        super(R.drawable.sprite_malus,1);
 
     }
 
