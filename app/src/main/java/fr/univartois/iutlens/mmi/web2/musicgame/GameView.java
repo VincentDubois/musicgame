@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -206,13 +207,21 @@ public class GameView extends View implements View.OnTouchListener {
      * déplacement de tous les sprites
      */
     private void updateSprite() {
-        if (sprite.size()< 10 && Math.random()< 0.05)
-            sprite.add(Math.random() > 0.5f ? new Bonus() :  new Malus());
+        if (sprite.size()< 10 && Math.random()< 0.05) // 5% d'ajouter un sprite si miuns de 10 sprites.
+            sprite.add(Math.random() > 0.5f ? new Bonus() :  new Malus()); // 50% Bonus / 50% Malus
 
 
-        for(Sprite s : sprite){
+
+        Iterator<Sprite> it = sprite.iterator();
+        while(it.hasNext()){
+
+            Sprite s = it.next();
+
             s.act();
+            if (s.getY()==0) it.remove();
+
         }
+
     }
 
     /**
