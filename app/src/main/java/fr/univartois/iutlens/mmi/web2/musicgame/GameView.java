@@ -76,7 +76,12 @@ public class GameView extends View implements View.OnTouchListener {
     private void init(Context context, AttributeSet attrs, int defStyle) {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
         SpriteSheet.register(context,R.drawable.cursor,1,1);
-
+        SpriteSheet.register(context,R.drawable.fond1,1,1);
+        SpriteSheet.register(context,R.drawable.fond2,1,1);
+        SpriteSheet.register(context,R.drawable.fond3,1,1);
+        SpriteSheet.register(context,R.drawable.fond4,1,1);
+        SpriteSheet.register(context,R.drawable.fond5,1,1);
+        SpriteSheet.register(context,R.drawable.fond6,1,1);
         SpriteSheet.register(context,R.drawable.sprite_bonus,2,1);
         SpriteSheet.register(context,R.drawable.sprite_malus,2,1);
 
@@ -89,7 +94,7 @@ public class GameView extends View implements View.OnTouchListener {
         // Caractéristiques des bords
         wallPaint = new Paint();
         wallPaint.setAntiAlias(true);
-        wallPaint.setColor(0xff224499 );
+        wallPaint.setColor(0xff000000 );
         wallPaint.setStyle(Paint.Style.STROKE);
         wallPaint.setStrokeWidth(PIXEL_SIZE+1);
         wallPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -97,7 +102,7 @@ public class GameView extends View implements View.OnTouchListener {
         scorePaint = new Paint();
 //        scorePaint.setAntiAlias(true);
         scorePaint.setStyle(Paint.Style.STROKE);
-        scorePaint.setColor(0xff000000 );
+        scorePaint.setColor(0xffffffff );
 
         scorePaint.setStrokeWidth(3);
         scorePaint.setTextSize(48);
@@ -190,7 +195,7 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,spriteSheet.h/2 - 15)){
+            if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
                 if (s instanceof Bonus){scoreNb ++;}
                 else{scoreNb --;}
@@ -227,7 +232,8 @@ public class GameView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(0xff99aaee);
+        canvas.drawColor(0xff333333);
+
 
         if (wall == null) return; // Si le jeu n'est pas initialisé, on ne fait rien
 
@@ -235,6 +241,13 @@ public class GameView extends View implements View.OnTouchListener {
         canvas.save();
         canvas.concat(transform);
 
+        //affichage fond
+        SpriteSheet.get(R.drawable.fond1).paint(canvas,0,0f,0f);
+        SpriteSheet.get(R.drawable.fond2).paint(canvas,0,0f,320f);
+        SpriteSheet.get(R.drawable.fond3).paint(canvas,0,0f,320*2f);
+        SpriteSheet.get(R.drawable.fond4).paint(canvas,0,0f,320*3f);
+        SpriteSheet.get(R.drawable.fond5).paint(canvas,0,0f,320*4f);
+        SpriteSheet.get(R.drawable.fond6).paint(canvas,0,0f,320*5f);
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
             /*
