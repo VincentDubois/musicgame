@@ -76,7 +76,12 @@ public class GameView extends View implements View.OnTouchListener {
     private void init(Context context, AttributeSet attrs, int defStyle) {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
         SpriteSheet.register(context,R.drawable.cursor,1,1);
-
+        SpriteSheet.register(context,R.drawable.fond1,1,1);
+        SpriteSheet.register(context,R.drawable.fond2,1,1);
+        SpriteSheet.register(context,R.drawable.fond3,1,1);
+        SpriteSheet.register(context,R.drawable.fond4,1,1);
+        SpriteSheet.register(context,R.drawable.fond5,1,1);
+        SpriteSheet.register(context,R.drawable.fond6,1,1);
         SpriteSheet.register(context,R.drawable.sprite_bonus,2,1);
         SpriteSheet.register(context,R.drawable.sprite_malus,2,1);
 
@@ -236,6 +241,13 @@ public class GameView extends View implements View.OnTouchListener {
         canvas.save();
         canvas.concat(transform);
 
+        //affichage fond
+        SpriteSheet.get(R.drawable.fond1).paint(canvas,0,0f,0f);
+        SpriteSheet.get(R.drawable.fond2).paint(canvas,0,0f,320f);
+        SpriteSheet.get(R.drawable.fond3).paint(canvas,0,0f,320*2f);
+        SpriteSheet.get(R.drawable.fond4).paint(canvas,0,0f,320*3f);
+        SpriteSheet.get(R.drawable.fond5).paint(canvas,0,0f,320*4f);
+        SpriteSheet.get(R.drawable.fond6).paint(canvas,0,0f,320*5f);
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
             /*
