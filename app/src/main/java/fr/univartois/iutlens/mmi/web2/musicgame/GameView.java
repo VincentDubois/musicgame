@@ -227,7 +227,8 @@ public class GameView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(0xff99aaee);
+        canvas.drawColor(0xff333333);
+
 
         if (wall == null) return; // Si le jeu n'est pas initialisé, on ne fait rien
 
