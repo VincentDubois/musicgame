@@ -211,17 +211,17 @@ public class GameView extends View implements View.OnTouchListener {
      * déplacement de tous les sprites
      */
     private void updateSprite() {
-        if (sprite.size()< 10 && Math.random()< 0.05) // 5% d'ajouter un sprite si miuns de 10 sprites.
-            sprite.add(Math.random() > 0.5f ? new Bonus() :  new Malus()); // 50% Bonus / 50% Malus
-
+        if (sprite.size()< 10 && Math.random()< 0.05){ // 5% d'ajouter un sprite si miuns de 10 sprites.
+            float minFFF = getStartXWall((wall.size()-1));
+            float maxFFF = (minFFF+3*WIDTH/4);
+            sprite.add(Math.random() > 0.5f ? new Bonus(minFFF,maxFFF) :  new Malus(minFFF,maxFFF)); // 50% Bonus / 50% Malus
+        }
 
 
         Iterator<Sprite> it = sprite.iterator();
         while(it.hasNext()){
 
             Sprite s = it.next();
-
-            //s.act();
             if (s.act()) it.remove();
         }
 
