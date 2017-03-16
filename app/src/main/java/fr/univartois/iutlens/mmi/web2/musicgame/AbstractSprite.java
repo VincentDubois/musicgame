@@ -20,20 +20,25 @@ public class AbstractSprite implements Sprite {
     // vue dans laquelle on s'affiche
 
 
-    public AbstractSprite( int id,int n) {
-        this.x = (float) (Math.random()*GameView.WIDTH);
+    public AbstractSprite( int id,int n, float min, float max) {
+        //entre 0 et 3/4
+        // margin qui est identique au margin du mur
+
+        this.x = (float) (Math.random()*(max-min))+min;
+        //
         this.y =  0;
         this.spriteSheet = SpriteSheet.get(id);
         this.n = n;
     }
 
     @Override
-    public void act() {
+    public boolean act() {
         y += GameView.PIXEL_SIZE*GameView.SPEED;
-        if (y> GameView.HEIGHT) {
+        if (y> GameView.HEIGHT){ //sort
             y = 0;
-            this.x = (float) (Math.random()*GameView.WIDTH);
-        };
+            return true;
+        }
+        return false;
 
     }
 
@@ -57,4 +62,6 @@ public class AbstractSprite implements Sprite {
 
         return dx*dx+dy*dy < ( rayonPlayer + rayonSprite) * ( rayonPlayer + rayonSprite);
     }
+
+
 }

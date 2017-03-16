@@ -9,8 +9,8 @@ public class Malus extends AbstractSprite {
 
 
 
-    public Malus(){
-        super(R.drawable.sprite_malus,1);
+    public Malus(float min, float max){
+        super(R.drawable.sprite_malus,1,min,max);
 
     }
 

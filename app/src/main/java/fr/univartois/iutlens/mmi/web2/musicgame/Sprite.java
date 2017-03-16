@@ -13,7 +13,7 @@ public interface Sprite {
     /**
      * Action à réaliser à chaque tour
      */
-    void act();
+    boolean act();
 
     /**
      * Dessiner le sprite
@@ -30,4 +30,5 @@ public interface Sprite {
      * @return vrai si le point touche le sprite
      */
     boolean contains(float x, float y, float size);
+
 }

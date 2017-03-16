@@ -9,8 +9,8 @@ public class Bonus extends AbstractSprite {
 
 
 
-    public Bonus(){
-        super(R.drawable.sprite_bonus,0);
+    public Bonus(float min, float max){
+        super(R.drawable.sprite_bonus,0,min,max);
     }
 
 }

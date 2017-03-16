@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -215,13 +216,20 @@ public class GameView extends View implements View.OnTouchListener {
      * déplacement de tous les sprites
      */
     private void updateSprite() {
-        if (sprite.size()< 10 && Math.random()< 0.05)
-            sprite.add(Math.random() > 0.5f ? new Bonus() :  new Malus());
-
-
-        for(Sprite s : sprite){
-            s.act();
+        if (sprite.size()< 10 && Math.random()< 0.05){ // 5% d'ajouter un sprite si miuns de 10 sprites.
+            float minFFF = getStartXWall((wall.size()-1));
+            float maxFFF = (minFFF+3*WIDTH/4);
+            sprite.add(Math.random() > 0.5f ? new Bonus(minFFF,maxFFF) :  new Malus(minFFF,maxFFF)); // 50% Bonus / 50% Malus
         }
+
+
+        Iterator<Sprite> it = sprite.iterator();
+        while(it.hasNext()){
+
+            Sprite s = it.next();
+            if (s.act()) it.remove();
+        }
+
     }
 
     /**
