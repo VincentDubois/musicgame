@@ -51,8 +51,11 @@ public class AbstractSprite implements Sprite {
         float dy = y-this.y;
 //        if (dy>=move) dy -= move;
 //        else if (dy >= 0) dy = 0;
-        return dx*dx+dy*dy < (size+spriteSheet.w/2) *(size+spriteSheet.h/2);
+//        return dx*dx+dy*dy < (size+spriteSheet.w/2) *(size+spriteSheet.h/2);
+        float rayonSprite = spriteSheet.w/2;
+        float rayonPlayer = size;
 
+        return dx*dx+dy*dy < ( rayonPlayer + rayonSprite) * ( rayonPlayer + rayonSprite);
     }
 
     @Override

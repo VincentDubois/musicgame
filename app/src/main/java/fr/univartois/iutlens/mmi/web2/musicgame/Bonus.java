@@ -10,8 +10,7 @@ public class Bonus extends AbstractSprite {
 
 
     public Bonus(){
-        super(R.drawable.ronds,0);
-
+        super(R.drawable.sprite_bonus,0);
     }
 
 }

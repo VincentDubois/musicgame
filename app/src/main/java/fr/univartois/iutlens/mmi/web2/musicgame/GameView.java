@@ -33,8 +33,7 @@ public class GameView extends View implements View.OnTouchListener {
 
     public static final int LINES = HEIGHT / PIXEL_SIZE;
     public static final int LINES_JOUEUR = Y_JOUEUR / PIXEL_SIZE;
-
-
+    
     public static final int TURN_DELAY_MILLIS = 25;
 
     // Position des éléments du mur
@@ -78,6 +77,9 @@ public class GameView extends View implements View.OnTouchListener {
     private void init(Context context, AttributeSet attrs, int defStyle) {
         SpriteSheet.register(context,R.drawable.ronds,2,1);
         SpriteSheet.register(context,R.drawable.cursor,1,1);
+
+        SpriteSheet.register(context,R.drawable.sprite_bonus,2,1);
+        SpriteSheet.register(context,R.drawable.sprite_malus,2,1);
 
         spriteSheet = SpriteSheet.get(R.drawable.cursor);
 
@@ -171,7 +173,7 @@ public class GameView extends View implements View.OnTouchListener {
     private void updateWall(int nb) {
         for(int i = 0; i< nb; ++i) {
             float last = wall.lastElement(); // On repart de la dernière position
-            last += (Math.random() - 0.5f) * 0.2f; // On ajoute une petite valeur, positive ou négative
+            last += (Math.random() - 0.5f) * 0.1f; // On ajoute une petite valeur, positive ou négative
             if (last < 0) last = 0; // On reste entre 0 et 1
             if (last > 1) last = 1;
             wall.add(last);
@@ -189,12 +191,14 @@ public class GameView extends View implements View.OnTouchListener {
         int i = 0;
         while (i< sprite.size()){ // On supprime les sprites touchés par le joueur
             Sprite s = sprite.elementAt(i);
-            if (s.contains(last.x,last.y,30)){
+            if (s.contains(last.x,last.y,spriteSheet.h/2 - 15)){
                 sprite.remove(i);
                 if (s instanceof Bonus){scoreNb ++;}
                 else{scoreNb --;}
             } else ++i;
         }
+
+        checkWall();
 
         invalidate(); // On demande le rafraîchissement de l'écran
     }
@@ -242,11 +246,15 @@ public class GameView extends View implements View.OnTouchListener {
 
         // Affichage des murs
         for(int i = 0; i < wall.size(); ++i){
+            /*
             canvas.drawLine(0,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     0.3f*wall.get(i)*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
 
             canvas.drawLine((0.7f+0.3f*wall.get(i))*WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
                     WIDTH,HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,wallPaint);
+             */
+            canvas.drawLine(getStartXWall(i), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE,
+                    getStartXWall(i) +(WIDTH*3/4), HEIGHT-i* PIXEL_SIZE - PIXEL_SIZE, wallPaint);
         }
 
         //Affichage des sprites
@@ -258,10 +266,30 @@ public class GameView extends View implements View.OnTouchListener {
         canvas.drawLine(0,Y_JOUEUR, WIDTH,Y_JOUEUR,wallPaint);
         spriteSheet.paint(canvas,0,last.x- spriteSheet.w/2,Y_JOUEUR- spriteSheet.h/2);
 
+        //
+
+
 
         canvas.restore(); // On restore la transformation d'origine
 
         canvas.drawText("Score : "+scoreNb, 20, 50, scorePaint);
+    }
+
+    private float getStartXWall(int line) {
+        return 0.3f*wall.get(line)*WIDTH;
+    }
+
+    public void checkWall() {
+//        Y_JOUEUR
+        float x_joueur = last.x;
+        float x_wall = getStartXWall(LINES_JOUEUR);
+
+        if ( x_wall > x_joueur ) {
+            scoreNb--;
+        } else if ( x_wall + (WIDTH * 3/4) < x_joueur) {
+            scoreNb--;
+        }
+
     }
 
     @Override
