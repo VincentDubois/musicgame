@@ -13,7 +13,7 @@ public interface Sprite {
     /**
      * Action à réaliser à chaque tour
      */
-    void act();
+    boolean act();
 
     /**
      * Dessiner le sprite
@@ -31,5 +31,4 @@ public interface Sprite {
      */
     boolean contains(float x, float y, float size);
 
-    float getY();
 }
