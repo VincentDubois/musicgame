@@ -30,7 +30,7 @@ public class AbstractSprite implements Sprite {
     @Override
     public void act() {
         y += GameView.PIXEL_SIZE*GameView.SPEED;
-        if (y> GameView.HEIGHT) {
+        if (y> GameView.HEIGHT) { //sort
             y = 0;
             this.x = (float) (Math.random()*GameView.WIDTH);
         };
@@ -53,5 +53,10 @@ public class AbstractSprite implements Sprite {
 //        else if (dy >= 0) dy = 0;
         return dx*dx+dy*dy < (size+spriteSheet.w/2) *(size+spriteSheet.h/2);
 
+    }
+
+    @Override
+    public float getY() {
+        return y;
     }
 }

@@ -30,4 +30,6 @@ public interface Sprite {
      * @return vrai si le point touche le sprite
      */
     boolean contains(float x, float y, float size);
+
+    float getY();
 }
