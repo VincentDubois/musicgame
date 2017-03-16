@@ -221,9 +221,8 @@ public class GameView extends View implements View.OnTouchListener {
 
             Sprite s = it.next();
 
-            s.act();
-            if (s.getY()==0) it.remove();
-
+            //s.act();
+            if (s.act()) it.remove();
         }
 
     }
