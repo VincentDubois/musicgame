@@ -8,6 +8,8 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AudioPlayer audioPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,15 +23,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        try {
-            JetPlayer jetPlayer = JetPlayer.getJetPlayer();
-            jetPlayer.loadJetFile(getResources().getAssets().openFd("test.jet"));
-            byte id = 0;
-            jetPlayer.queueJetSegment(0,-1,0,0,0,id);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        audioPlayer = AudioPlayer.get(this);
+        audioPlayer.loadById(this, R.raw.android_project);
     }
 
     @Override
@@ -41,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        JetPlayer.getJetPlayer().play();
+        audioPlayer.play();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        JetPlayer.getJetPlayer().pause();
+        audioPlayer.pause();
     }
 }
