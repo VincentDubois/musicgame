@@ -27,7 +27,7 @@ public class GameView extends View implements View.OnTouchListener {
     public static final RectF VIRTUAL_SCREEN = new RectF(0, 0, WIDTH, HEIGHT);
 
     // Nombre de lignes affichées à chaque tour
-    public static final int SPEED = 1;
+    public static final int SPEED = 2;
     // Taille en pixels de la taille de chaque ligne
     public static final int PIXEL_SIZE = 20;
 
@@ -198,8 +198,8 @@ public class GameView extends View implements View.OnTouchListener {
             Sprite s = sprite.elementAt(i);
             if (s.contains(last.x,last.y,30)){
                 sprite.remove(i);
-                if (s instanceof Bonus){scoreNb ++;}
-                else{scoreNb --;}
+                if (s instanceof Bonus){scoreNb += 1;}
+                else{scoreNb -= 5;}
             } else ++i;
         }
 
@@ -316,7 +316,7 @@ public class GameView extends View implements View.OnTouchListener {
 
         } else if (action == MotionEvent.ACTION_UP){
             // On ne touche plus l'écran, arrêter l'animation
-            stopTimer();
+            //stopTimer();
         }
         // Mise à jour de la position. Il faut appliquer la matrice
         // de transformation inverse, ce qui nécessite de placer le point
